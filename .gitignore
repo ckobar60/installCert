@@ -1,0 +1,8 @@
+dist/*
+build/*
+venv/*
+.idea/*
+*.cer
+*.crt
+*.crl
+main.spec
