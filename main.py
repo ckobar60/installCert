@@ -1,8 +1,13 @@
 from tqdm import tqdm
 import os
+import ctypes
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+
+
+def is_admin():
+        return ctypes.windll.shell32.IsUserAnAdmin() == 1
 
 
 def make_dir():
@@ -10,6 +15,8 @@ def make_dir():
     for dir in list_dirs:
         if not os.path.exists(dir):
             os.makedirs(dir)
+
+
 def install_cert():
     user_input = input("Установить сертификаты Федерального казначейства (Y/N)")
     if user_input.lower() in ["yes", "y", "да", "д"]:
@@ -79,15 +86,18 @@ def copy_utils():
             pass
 
 
-
-
 if __name__ == "__main__":
-    make_dir()
-    user_input = input("Скачать сертификаты Федерального казначейства(Y/N)")
-    if user_input.lower() in ["yes", "y", "да", "д"]:
-        sort_links(get_links())
-        copy_utils()
-        install_cert()
-    if user_input.lower() in ["no", "n", "нет", "н"]:
-        copy_utils()
-        install_cert()
+    if is_admin():
+        make_dir()
+        user_input = input("Скачать сертификаты Федерального казначейства(Y/N)")
+        if user_input.lower() in ["yes", "y", "да", "д"]:
+            sort_links(get_links())
+            copy_utils()
+            install_cert()
+        if user_input.lower() in ["no", "n", "нет", "н"]:
+            copy_utils()
+            install_cert()
+    else:
+        print("Необходимо запустить скрипт от имени администратора.")
+        pass
+
